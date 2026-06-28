@@ -1,0 +1,18 @@
+
+@for (signal of signals; track $index) {
+  <mat-card class="mb-3">
+    <h2>{{ signal.stockName }}</h2>
+
+    <p>Signal : {{ signal.signal }}</p>
+
+    <p>Entry : {{ signal.entry }}</p>
+
+    <p>Target : {{ signal.target }}</p>
+
+    <p>SL : {{ signal.stopLoss }}</p>
+
+    <p>
+      Confidence : {{ signal.confidence }}%
+    </p>
+  </mat-card>
+}

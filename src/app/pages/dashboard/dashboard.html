@@ -1,0 +1,305 @@
+<div class="dashboard-container">
+
+    <!-- Header -->
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <h2>
+                📈 AI Trading Dashboard
+            </h2>
+
+            <p>
+                Live AI Market Predictions
+            </p>
+
+        </div>
+
+        <button mat-raised-button color="primary">
+            Last Updated :
+            {{dataSource.data.length ? (dataSource.data[0].created_on | date:'dd MMM yyyy hh:mm a') : '--'}}
+        </button>
+
+    </div>
+
+    <!-- Summary Cards -->
+
+    <div class="summary-cards">
+
+        <mat-card class="summary-card buy">
+
+            <h3>BUY</h3>
+
+            <h1>
+                {{dataSource.data.filter(x=>x.recommendation=='BUY').length}}
+            </h1>
+
+        </mat-card>
+
+        <mat-card class="summary-card sell">
+
+            <h3>SELL</h3>
+
+            <h1>
+                {{dataSource.data.filter(x=>x.recommendation=='SELL').length}}
+            </h1>
+
+        </mat-card>
+
+        <mat-card class="summary-card hold">
+
+            <h3>HOLD</h3>
+
+            <h1>
+                {{dataSource.data.filter(x=>x.recommendation=='HOLD').length}}
+            </h1>
+
+        </mat-card>
+
+        <mat-card class="summary-card impact">
+
+            <h3>HIGH IMPACT</h3>
+
+            <h1>
+                {{dataSource.data.filter(x=>x.impact=='HIGH').length}}
+            </h1>
+
+        </mat-card>
+
+    </div>
+
+    <!-- Search -->
+
+    <mat-form-field appearance="outline" class="search-box">
+
+        <mat-label>
+
+            Search Company / Sector
+
+        </mat-label>
+
+        <input
+            matInput
+            placeholder="Search..."
+            (keyup)="applyFilter($event)">
+
+        <mat-icon matSuffix>
+
+            search
+
+        </mat-icon>
+
+    </mat-form-field>
+
+    <!-- Table -->
+
+    <div class="table-wrapper">
+
+        <table
+            mat-table
+            [dataSource]="dataSource"
+            matSort>
+
+            <!-- Company -->
+
+            <ng-container matColumnDef="company">
+
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+
+                    Company
+
+                </th>
+
+                <td mat-cell *matCellDef="let row">
+
+                    <div class="company">
+
+                        <div class="avatar">
+
+                            {{row.company?.charAt(0)}}
+
+                        </div>
+
+                        <div>
+
+                            <strong>
+
+                                {{row.company}}
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </td>
+
+            </ng-container>
+
+            <!-- Sector -->
+
+            <ng-container matColumnDef="sector">
+
+                <th mat-header-cell *matHeaderCellDef>
+
+                    Sector
+
+                </th>
+
+                <td mat-cell *matCellDef="let row">
+
+                    {{row.sector}}
+
+                </td>
+
+            </ng-container>
+
+            <!-- Recommendation -->
+
+            <ng-container matColumnDef="recommendation">
+
+                <th mat-header-cell *matHeaderCellDef>
+
+                    Signal
+
+                </th>
+
+                <td mat-cell *matCellDef="let row">
+
+                    <span
+                        class="signal"
+                        [ngClass]="row.recommendation.toLowerCase()">
+
+                        {{row.recommendation}}
+
+                    </span>
+
+                </td>
+
+            </ng-container>
+
+            <!-- Confidence -->
+
+            <ng-container matColumnDef="confidence">
+
+                <th mat-header-cell *matHeaderCellDef>
+
+                    Confidence
+
+                </th>
+
+                <td mat-cell *matCellDef="let row">
+
+                    <div class="confidence">
+
+                        <mat-progress-bar
+                            mode="determinate"
+                            [value]="row.confidence">
+
+                        </mat-progress-bar>
+
+                        <span>
+
+                            {{row.confidence}}%
+
+                        </span>
+
+                    </div>
+
+                </td>
+
+            </ng-container>
+
+            <!-- Impact -->
+
+            <ng-container matColumnDef="impact">
+
+                <th mat-header-cell *matHeaderCellDef>
+
+                    Impact
+
+                </th>
+
+                <td mat-cell *matCellDef="let row">
+
+                    <span
+                        class="impact-chip">
+
+                        {{row.impact}}
+
+                    </span>
+
+                </td>
+
+            </ng-container>
+
+            <!-- Reason -->
+
+            <ng-container matColumnDef="reason">
+
+                <th mat-header-cell *matHeaderCellDef>
+
+                    AI Reason
+
+                </th>
+
+                <td mat-cell *matCellDef="let row">
+
+                    <div
+                        class="reason"
+                        [matTooltip]="row.reason">
+
+                        {{row.reason}}
+
+                    </div>
+
+                </td>
+
+            </ng-container>
+
+            <!-- Time -->
+
+            <ng-container matColumnDef="created_on">
+
+                <th mat-header-cell *matHeaderCellDef>
+
+                    Time
+
+                </th>
+
+                <td mat-cell *matCellDef="let row">
+
+                    {{row.created_on | date:'dd MMM hh:mm a'}}
+
+                </td>
+
+            </ng-container>
+
+            <tr
+                mat-header-row
+                *matHeaderRowDef="displayedColumns; sticky:true">
+
+            </tr>
+
+            <tr
+                mat-row
+                *matRowDef="let row; columns:displayedColumns">
+
+            </tr>
+
+        </table>
+
+    </div>
+
+    <mat-paginator
+
+        [pageSize]="10"
+
+        [pageSizeOptions]="[10,20,50]"
+
+        showFirstLastButtons>
+
+    </mat-paginator>
+
+</div>

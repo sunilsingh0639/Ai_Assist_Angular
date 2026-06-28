@@ -1,0 +1,21 @@
+<table class="table">
+
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Sentiment</th>
+      <th>Confidence</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+    <tr *ngFor="let item of news">
+      <td>{{item.title}}</td>
+      <td>{{item.sentiment}}</td>
+      <td>{{item.confidence}}%</td>
+    </tr>
+
+  </tbody>
+
+</table>
