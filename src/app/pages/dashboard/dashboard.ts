@@ -15,6 +15,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { MatTooltip } from '@angular/material/tooltip';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-dashboard',
@@ -36,11 +37,12 @@ import { MatTooltip } from '@angular/material/tooltip';
 })
 export class Dashboard {
   private aiService = inject(AiMarket);
+  private spinner = inject(NgxSpinnerService);
   predictions: any[] = [];
   buyCount = 0;
-sellCount = 0;
-holdCount = 0;
-highImpactCount = 0;
+  sellCount = 0;
+  holdCount = 0;
+  highImpactCount = 0;
   dataSource = new MatTableDataSource<any>();
   displayedColumns: string[] = [
     'company',
@@ -51,7 +53,6 @@ highImpactCount = 0;
     'reason',
     'created_on'
   ];
-  loading = true;
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
   @ViewChild(MatSort)
@@ -63,47 +64,43 @@ highImpactCount = 0;
 
   }
 
-ngAfterViewInit(): void {
+  ngAfterViewInit(): void {
 
-  if (this.dataSource) {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  }
-
-}
-loadPredictions() {
-
-  this.loading = true;
-
-  this.aiService.getTodayPredictions().subscribe({
-
-    next: (res: any) => {
-      this.buyCount = res.filter((x:any)=>x.recommendation==='BUY').length;
-
-this.sellCount = res.filter((x:any)=>x.recommendation==='SELL').length;
-
-this.holdCount = res.filter((x:any)=>x.recommendation==='HOLD').length;
-
-this.highImpactCount = res.filter((x:any)=>x.impact==='HIGH').length;
-      this.dataSource = new MatTableDataSource(res);
-
+    if (this.dataSource) {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-
-      this.loading = false;
-
-    },
-
-    error: (err) => {
-
-      console.log(err);
-      this.loading = false;
-
     }
 
-  });
+  }
+  loadPredictions() {
+    this.spinner.show();
+    this.aiService.getTodayPredictions().subscribe({
 
-}
+      next: (res: any) => {
+        this.buyCount = res.filter((x: any) => x.recommendation === 'BUY').length;
+
+        this.sellCount = res.filter((x: any) => x.recommendation === 'SELL').length;
+
+        this.holdCount = res.filter((x: any) => x.recommendation === 'HOLD').length;
+
+        this.highImpactCount = res.filter((x: any) => x.impact === 'HIGH').length;
+        this.dataSource = new MatTableDataSource(res);
+
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.spinner.hide();
+      },
+
+      error: (err) => {
+
+        console.log(err);
+        this.spinner.hide();
+
+      }
+
+    });
+
+  }
   applyFilter(event: Event) {
 
     const value = (event.target as HTMLInputElement).value;
