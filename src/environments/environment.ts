@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
 
-  apiUrl: 'https://ai-trading-backend-tv4x.onrender.com'
+  apiUrl: 'http://51.20.91.30'
 };
